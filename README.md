@@ -15,7 +15,7 @@ What makes it unique? Your accepted solutions get mined into blocks every 10 min
 
 ## Features
 
-- **TimeStamp-Anchored Solutions** - Every accepted solution is mined into a block
+- **Blockchain-Anchored Solutions** - Every accepted solution is mined into a block
 - **Dynamic Scoring** - Points decrease as more developers solve problems
 - **Bitcoin-Specific Challenges** - Problems covering Bitcoin protocol, cryptography, Lightning Network, and Layer 2/3 protocols
 - **Global Leaderboards** - Compete with Bitcoin developers worldwide
@@ -90,6 +90,10 @@ codeproof/
 │   └── problems/        # Problem definitions and test cases
 └── docker-compose.yml   # Container orchestration
 ```
+
+## Problem Categories
+
+CodeProof organizes challenges across 5 major areas of Bitcoin development, from computer science fundamentals to cutting-edge Layer 2/3 protocols:
 
 ### Algorithms & Data Structures (ID: 10-99)
 Core computer science fundamentals that form the foundation of efficient Bitcoin implementations.
