@@ -42,6 +42,11 @@ async def startup_event():
     logger.info(f"Database: {settings.DATABASE_URL.split('@')[1] if '@' in settings.DATABASE_URL else 'configured'}")
     logger.info(f"CORS Origins: {settings.CORS_ORIGINS}")
 
+    # Initialize database (create tables if they don't exist)
+    from app.database import init_db
+    await init_db()
+    logger.info("✅ Database initialized")
+
     # Start block mining scheduler
     from app.jobs.block_miner import start_block_mining_scheduler
     start_block_mining_scheduler()
