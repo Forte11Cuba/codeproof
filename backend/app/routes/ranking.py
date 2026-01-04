@@ -69,8 +69,10 @@ async def get_ranking(
         # Fallback to total_score if cache is null
 
         # Step 1: Get all users with their scores (for rank calculation)
+        # Filter only users who want to be shown in ranking
         query = (
             select(User)
+            .where(User.show_in_ranking == True)
             .order_by(
                 User.total_score_cached.desc().nullslast(),  # Use cached score (can be null)
                 User.total_score.desc(),  # Fallback to legacy score

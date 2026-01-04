@@ -145,6 +145,9 @@ class User(Base):
     country = Column(String(100), nullable=True)
     organization = Column(String(255), nullable=True)
 
+    # Privacy settings
+    show_in_ranking = Column(Boolean, nullable=False, default=True)
+
     # Stats (denormalized for performance)
     total_score = Column(Float, nullable=False, default=0, index=True)  # DEPRECATED: use total_score_cached
     problems_solved = Column(Integer, nullable=False, default=0)

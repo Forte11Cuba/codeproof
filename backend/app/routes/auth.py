@@ -201,6 +201,9 @@ async def update_current_user_profile(
         if profile_data.organization is not None:
             current_user.organization = profile_data.organization if profile_data.organization.strip() != "" else None
 
+        if profile_data.show_in_ranking is not None:
+            current_user.show_in_ranking = profile_data.show_in_ranking
+
         await db.commit()
         await db.refresh(current_user)
 

@@ -525,6 +525,55 @@
               </button>
             </div>
           </form>
+
+          <!-- Privacy Settings (inside same card) -->
+          <div style="margin-top: var(--spacing-2xl); padding-top: var(--spacing-2xl); border-top: 1px solid var(--border-color);">
+            <div style="margin-bottom: var(--spacing-lg);">
+              <h3 style="font-size: var(--fs-lg); font-weight: 600; color: var(--text-primary); margin-bottom: var(--spacing-xs); display: flex; align-items: center; gap: 8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
+                  <path d="m9 12 2 2 4-4"/>
+                </svg>
+                <span data-i18n="settings.privacySettings">Privacy Settings</span>
+              </h3>
+              <p style="font-size: var(--fs-sm); color: var(--text-secondary);" data-i18n="settings.privacySettingsDesc">Control your visibility on the platform</p>
+            </div>
+
+            <form id="privacy-form">
+              <!-- Show in Ranking Toggle -->
+              <div class="form-group">
+                <label class="toggle-container">
+                  <div class="toggle-label-text">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                        <path d="M4 22h16"/>
+                        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+                        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                      </svg>
+                      <span style="font-weight: 500; color: var(--text-primary); font-size: var(--fs-base);" data-i18n="settings.showInRanking">Show my profile in public ranking</span>
+                    </div>
+                    <small class="form-help" data-i18n="settings.showInRankingHelp">When disabled, you won't appear in the public leaderboard. Your submissions and stats remain private.</small>
+                  </div>
+                  <input type="checkbox" id="show-in-ranking" class="toggle-input" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" id="save-privacy-btn" class="btn btn-primary">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                    <polyline points="17 21 17 13 7 13 7 21"/>
+                    <polyline points="7 3 7 8 15 8"/>
+                  </svg>
+                  <span data-i18n="settings.savePrivacy">Save Privacy Settings</span>
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </section>
 
@@ -560,9 +609,10 @@
         window.i18n.updateElements();
       }
 
-      // Form handlers (placeholder for now)
+      // Form handlers
       document.getElementById('profile-form').addEventListener('submit', handleProfileSubmit);
       document.getElementById('password-form').addEventListener('submit', handlePasswordSubmit);
+      document.getElementById('privacy-form').addEventListener('submit', handlePrivacySubmit);
     });
 
     function setupNavigation() {
@@ -636,6 +686,9 @@
         document.getElementById('github').value = user.github_url || '';
         document.getElementById('country').value = user.country || '';
         document.getElementById('organization').value = user.organization || '';
+
+        // Load privacy settings
+        document.getElementById('show-in-ranking').checked = user.show_in_ranking !== false;
       } catch (error) {
         console.error('Error loading user settings:', error);
         Notifications.error('Failed to load user settings');
@@ -822,6 +875,45 @@
 
     newPasswordInput.addEventListener('input', validateNewPassword);
     confirmPasswordInput.addEventListener('input', validateConfirmPassword);
+
+    async function handlePrivacySubmit(e) {
+      e.preventDefault();
+
+      const saveButton = document.getElementById('save-privacy-btn');
+      const buttonText = saveButton.querySelector('span');
+      const originalText = buttonText.textContent;
+
+      try {
+        // Disable button and show loading state
+        saveButton.disabled = true;
+        buttonText.textContent = window.i18n.t('settings.saving');
+
+        // Get privacy settings
+        const showInRanking = document.getElementById('show-in-ranking').checked;
+
+        // Call API to update privacy settings
+        const updatedUser = await API.updateProfile({ show_in_ranking: showInRanking });
+
+        // Update local storage with new user data
+        const currentUserData = JSON.parse(localStorage.getItem('user'));
+        const mergedUser = { ...currentUserData, ...updatedUser };
+        localStorage.setItem('user', JSON.stringify(mergedUser));
+
+        // Show success message
+        Notifications.success('', window.i18n.t('settings.privacyUpdated') || 'Privacy settings updated successfully');
+
+        // Reload user settings to show updated data
+        await loadUserSettings();
+
+      } catch (error) {
+        console.error('Error updating privacy settings:', error);
+        Notifications.error('', error.message || window.i18n.t('settings.privacyUpdateError') || 'Failed to update privacy settings');
+      } finally {
+        // Re-enable button and restore original text
+        saveButton.disabled = false;
+        buttonText.textContent = originalText;
+      }
+    }
   </script>
 
   <style>
@@ -995,6 +1087,65 @@
       background: #ff9f3d;
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(247, 147, 26, 0.3);
+    }
+
+    /* Toggle Switch Styles */
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      gap: var(--spacing-lg);
+    }
+
+    .toggle-label-text {
+      flex: 1;
+    }
+
+    .toggle-input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    .toggle-slider {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
+      background-color: var(--bg-tertiary);
+      border: 2px solid var(--border-color);
+      border-radius: 34px;
+      transition: var(--transition-fast);
+      flex-shrink: 0;
+    }
+
+    .toggle-slider:after {
+      content: "";
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 2px;
+      top: 2px;
+      background-color: var(--text-secondary);
+      border-radius: 50%;
+      transition: var(--transition-fast);
+    }
+
+    .toggle-input:checked + .toggle-slider {
+      background-color: var(--accent-orange);
+      border-color: var(--accent-orange);
+    }
+
+    .toggle-input:checked + .toggle-slider:after {
+      transform: translateX(24px);
+      background-color: #000;
+    }
+
+    .toggle-container:hover .toggle-slider {
+      box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.1);
     }
   </style>
 </body>

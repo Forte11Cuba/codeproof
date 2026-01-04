@@ -64,6 +64,7 @@ class UserOut(UserBase):
     github_url: Optional[str] = None
     country: Optional[str] = None
     organization: Optional[str] = None
+    show_in_ranking: bool = True
     role: UserRole
     total_score: float
     problems_solved: int
@@ -87,6 +88,7 @@ class UserUpdate(BaseModel):
     github_url: Optional[str] = None
     country: Optional[str] = None
     organization: Optional[str] = None
+    show_in_ranking: Optional[bool] = None
 
 
 class PasswordChange(BaseModel):

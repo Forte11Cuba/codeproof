@@ -156,6 +156,13 @@ const translations = {
     'settings.profileUpdateError': 'Failed to update profile',
     'settings.passwordChanged': 'Password changed successfully',
     'settings.passwordChangeError': 'Failed to change password',
+    'settings.privacySettings': 'Privacy Settings',
+    'settings.privacySettingsDesc': 'Control your visibility on the platform',
+    'settings.showInRanking': 'Show my profile in public ranking',
+    'settings.showInRankingHelp': 'When disabled, you won\'t appear in the public leaderboard. Your submissions and stats remain private.',
+    'settings.savePrivacy': 'Save Privacy Settings',
+    'settings.privacyUpdated': 'Privacy settings updated successfully!',
+    'settings.privacyUpdateError': 'Failed to update privacy settings',
 
     // Profile
     'profile.title': 'Profile',
@@ -681,6 +688,13 @@ const translations = {
     'settings.profileUpdateError': 'Error al actualizar el perfil',
     'settings.passwordChanged': 'Contraseña cambiada correctamente',
     'settings.passwordChangeError': 'Error al cambiar la contraseña',
+    'settings.privacySettings': 'Configuración de Privacidad',
+    'settings.privacySettingsDesc': 'Controla tu visibilidad en la plataforma',
+    'settings.showInRanking': 'Mostrar mi perfil en el ranking público',
+    'settings.showInRankingHelp': 'Cuando esté desactivado, no aparecerás en la tabla de clasificación pública. Tus envíos y estadísticas permanecen privados.',
+    'settings.savePrivacy': 'Guardar Configuración de Privacidad',
+    'settings.privacyUpdated': '¡Configuración de privacidad actualizada correctamente!',
+    'settings.privacyUpdateError': 'Error al actualizar la configuración de privacidad',
 
     // Profile
     'profile.title': 'Perfil',
